@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather app</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: linear-gradient(to bottom, #df96eb, #c5cae9);
+      color: #4A148C;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .titlecard {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .titlecard .title {
+      font-size: 2.5em;
+      margin: 0;
+    }
+
+    .titlecard .title span {
+      color: #7B1FA2;
+    }
+
+    .card {
+      margin-bottom: 20px;
+    }
+
+    .inputBox {
+      padding: 10px;
+      border: 1px solid #7B1FA2;
+      border-radius: 5px;
+      margin-right: 10px;
+      width: 200px;
+    }
+
+    .btnSearch {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #7B1FA2;
+      color: white;
+      cursor: pointer;
+    }
+
+    .btnSearch:hover {
+      background-color: #4A148C;
+    }
+
+    .output {
+      background-color: #EDE7F6;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .cityNameCard, .tempCard {
+      margin-bottom: 10px;
+    }
+
+    #temp {
+      font-size: 2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="titlecard">
+    <p class="title"><span>Weather</span> APP</p>
+    <p>Get the Weather details of any city , Right now</p>
+  </div>
+
+  <div class="card">
+    <input id="cityInput" class="inputBox" placeholder="Enter your city" type="text">
+    <button id="searchBtn" class="btnSearch">Search</button>
+  </div>
+
+  <!--output-->
+  <div id="outputCard" class="output">
+    <div class="cityNameCard">
+      <p id="city-name"></p>
+      <p id="countryName"></p>
+    </div>
+
+    <div class="tempCard">
+      <p id="temp"></p><sup id="sup"></sup>
+    </div>
+
+    <p id="loc-time"></p>
+  </div>
+
+  <script>
+    const APIKEY = "5ca773cbdabf40d2b09142149240508";
+
+    const cityInput = document.getElementById("cityInput");
+    const searchBtn = document.getElementById("searchBtn");
+    const cityName = document.getElementById("city-name");
+    const country = document.getElementById("countryName");
+    const locTime = document.getElementById("loc-time");
+    const temp = document.getElementById("temp");
+
+    async function getData(APIKEY, cityInput) {
+      const promise = await fetch(`http://api.weatherapi.com/v1/current.json?key=${APIKEY}&q=${cityInput}&aqi=yes`);
+      return await promise.json();
+    }
+
+    searchBtn.addEventListener('click', async () => {
+      const input = cityInput.value;
+      const result = await getData(APIKEY, input);
+      console.log(input);
+      console.log(result);
+      cityName.innerText = `${result.location.name}, ${result.location.region}`;
+      country.innerText = result.location.country;
+      temp.innerText = `${result.current.temp_c}°C`;
+      locTime.innerText = result.location.localtime;
+    });
+  </script>
+</body>
+</html>
